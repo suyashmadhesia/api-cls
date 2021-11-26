@@ -127,6 +127,9 @@ class ClassRoomView(APIView):
                 }, }, status=status.HTTP_201_CREATED)
         return Response({"error": serializer.errors}, status=status.HTTP_403_FORBIDDEN)
 
+    def get(self, request):
+        return Response({"msg" : "success"})
+
 
 class JoinClassRoom(APIView):
     # TODO Leave class room code for students
@@ -147,8 +150,11 @@ class JoinClassRoom(APIView):
             return Response({'error': 'Invalid Credential'}, status=status.HTTP_401_UNAUTHORIZED)
         try:
             assert data['cls_id'] and data['join'], KeyError()
+            # Joining the class room
             if data['join']:
                 classroom = Classroom.objects.filter(cls_id=data['cls_id'])[0]
+                if user.account_id in classroom.blocked_accounts:
+                    return Response({"error" : "not allowed!"}, status=status.HTTP_406_NOT_ACCEPTABLE)
                 serializer = ClassRoomSerializer(classroom)
                 if len(classroom.students.filter(account_id=user.account_id)) > 0:
                     return Response({"error" : "already joined"}, status=status.HTTP_406_NOT_ACCEPTABLE)

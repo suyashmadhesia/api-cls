@@ -4,6 +4,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 from clsroom.accounts.forms import UserAdminChangeForm, UserAdminCreationForm
+from .models import *
 
 User = get_user_model()
 
@@ -24,8 +25,8 @@ class UserAdmin(BaseUserAdmin):
     
     fieldsets = (
         (None, {'fields': ('email','password',)}),
-        ('Personal info', {'fields': ('name', 'branch')}),
-        ('Permissions', {'fields': ('is_staff',)}),
+        ('Personal info', {'fields': ('name', 'branch',)}),
+        ('Permissions', {'fields': ('is_staff', 'is_faculty', 'cls_room_id',)}),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.
@@ -50,7 +51,7 @@ class UserAdmin(BaseUserAdmin):
                 'email',
                 'password',
                 'is_superuser',
-                
+                'is_faculty'
             }
 
         # Prevent non-superusers from editing their own permissions
@@ -64,6 +65,7 @@ class UserAdmin(BaseUserAdmin):
                 'email',
                 'password',
                 'is_superuser',
+                'is_faculty'
             }
 
         for f in disabled_fields:
@@ -74,5 +76,8 @@ class UserAdmin(BaseUserAdmin):
     
 
 
-
+admin.site.register(Classroom)
+admin.site.register(Message)
+admin.site.register(Comment)
+admin.site.register(MediaFile)
 admin.site.register(User, UserAdmin)

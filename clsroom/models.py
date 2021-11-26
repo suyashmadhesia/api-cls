@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.postgres.fields import ArrayField
+import uuid
 
 
 class AccountManager(BaseUserManager):
@@ -30,6 +31,7 @@ class AccountManager(BaseUserManager):
             raise ValueError('Superuser must have is_superuser=True.')
         return self.create_user(account_id, password, **extra_fields)
 
+
 class Account(AbstractBaseUser, PermissionsMixin):
     account_id = models.CharField(max_length=10, primary_key=True)
     branch = models.CharField(max_length=2, default='', blank=True, null=True)
@@ -39,13 +41,12 @@ class Account(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
-    cls_room_id = ArrayField(models.CharField(max_length=30, blank=True), default=list)
-
+    cls_room_id = ArrayField(models.CharField(
+        max_length=len(str(uuid.uuid1())), blank=True), default=list)
 
     objects = AccountManager()
     USERNAME_FIELD = 'account_id'
     REQUIRED_FIELD = ('email')
-
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"
@@ -62,3 +63,66 @@ class Account(AbstractBaseUser, PermissionsMixin):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
         return self.is_satff
+
+
+# FIXME setup uuid unique for every time 
+
+class Comment(models.Model):
+    cid = models.CharField(
+        max_length=len(str(uuid.uuid1())),
+        primary_key=True, default=str(uuid.uuid1()), editable=False)
+    cls_id = models.CharField(max_length=16, blank=False)
+    mid = models.CharField(max_length=16, blank=False)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    publiser = models.ForeignKey(
+        Account, related_name='cpublisher', on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return str(self.cid)
+
+
+class MediaFile(models.Model):
+    m_url = models.CharField(max_length=200, primary_key=True)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    comment = models.ManyToManyField(
+        Comment, related_name='classCommentF', default=None)
+
+    def __str__(self) -> str:
+        return self.m_url
+
+
+class Message(models.Model):
+    mid = models.CharField(
+        max_length=len(str(uuid.uuid1())),
+        primary_key=True, default=str(uuid.uuid1()), editable=False)
+    cls_id = models.CharField(max_length=16, blank=False)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    publiser = models.ForeignKey(
+        Account, related_name='mpublisher', on_delete=models.CASCADE)
+    comment = models.ManyToManyField(
+        Comment, related_name='classCommentM', default=None)
+
+    def __str__(self) -> str:
+        return str(self.mid)
+
+
+class Classroom(models.Model):
+    cls_id = models.CharField(
+        max_length=len(str(uuid.uuid1())),
+        primary_key=True, default=str(uuid.uuid1()), editable=False)
+    name = models.CharField(max_length=30, blank=False)
+    owner = models.ForeignKey(
+        Account, related_name='classOwner', on_delete=models.CASCADE, blank=False)
+    students = models.ManyToManyField(
+        Account, related_name='students', blank=True)
+    is_active = models.BooleanField(default=True)
+    media_files = models.ManyToManyField(
+        MediaFile, related_name='mediaFiles', blank=True)
+    messages = models.ManyToManyField(
+        Message, related_name='classMessage', blank=True)
+
+    def __str__(self) -> str:
+        return str(self.cls_id) + " <==NAME==> " + self.name

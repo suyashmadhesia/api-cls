@@ -149,22 +149,54 @@ class JoinClassRoom(APIView):
         except:
             return Response({'error': 'Invalid Credential'}, status=status.HTTP_401_UNAUTHORIZED)
         try:
-            assert data['cls_id'] and data['join'], KeyError()
+            assert data['cls_id'], KeyError()
+            classroom = Classroom.objects.filter(cls_id=data['cls_id'])[0]
             # Joining the class room
-            if data['join']:
-                classroom = Classroom.objects.filter(cls_id=data['cls_id'])[0]
-                if user.account_id in classroom.blocked_accounts:
-                    return Response({"error" : "not allowed!"}, status=status.HTTP_406_NOT_ACCEPTABLE)
-                serializer = ClassRoomSerializer(classroom)
-                if len(classroom.students.filter(account_id=user.account_id)) > 0:
-                    return Response({"error" : "already joined"}, status=status.HTTP_406_NOT_ACCEPTABLE)
-                user.cls_room_id.append(data['cls_id'])
-                user.save()
-                classroom.students.add(user)
-                return Response({"message" : "successful","data" : serializer.data}, status=status.HTTP_202_ACCEPTED)
+            if user.account_id in classroom.blocked_accounts:
+                return Response({"error" : "not allowed!"}, status=status.HTTP_406_NOT_ACCEPTABLE)
+            serializer = ClassRoomSerializer(classroom)
+            if len(classroom.students.filter(account_id=user.account_id)) > 0:
+                return Response({"error" : "already joined"}, status=status.HTTP_406_NOT_ACCEPTABLE)
+            user.cls_room_id.append(data['cls_id'])
+            user.save()
+            classroom.students.add(user)
+            return Response({"message" : "successful","data" : serializer.data}, status=status.HTTP_202_ACCEPTED)
+            # print("error")
+            # if data['join'] == False:
+            #     print("error")
+                # user.cls_room_id.remove(data['cls_id'])
+                # user.save()
+                # classroom.students.remove(user)
+                # return Response({"message" : "successful"}, status=status.HTTP_200_OK)
 
         except KeyError as key_error:
             print(key_error)
             return Response({"error": "Invalid Fields"}, status=status.HTTP_406_NOT_ACCEPTABLE)
-            
+
+
+class LeaveClassView(APIView):
+    
+    def post(self, request):
+        token_key = request.META.get('HTTP_AUTHORIZATION')
+        data = json.loads(request.body)
+        try:
+            token_key = token_key[6:]
+            tokens: Token = Token.objects.filter(key=token_key)
+            token = tokens.first()
+            user: Account = token.user
+        except:
+            return Response({'error': 'Invalid Credential'}, status=status.HTTP_401_UNAUTHORIZED)
+        try:
+            assert data['cls_id'], KeyError()
+            classroom = Classroom.objects.filter(cls_id=data['cls_id'])[0]
+            try:
+                user.cls_room_id.remove(data['cls_id'])
+                user.save()
+                classroom.students.remove(user)
+                return Response({"message" : "successful"}, status=status.HTTP_200_OK)
+            except:
+                return Response({"error" : "id not found"}, status=status.HTTP_404_NOT_FOUND)
+        except KeyError as key_error:
+            print(key_error)
+            return Response({"error": "Invalid Fields"}, status=status.HTTP_406_NOT_ACCEPTABLE)
         

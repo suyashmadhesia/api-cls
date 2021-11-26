@@ -1,4 +1,6 @@
-from .views import *
+from accounts.views import *
+from faculty.views import *
+from student.views import *
 from django.urls import path
 
 urlpatterns = [

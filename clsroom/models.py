@@ -123,6 +123,8 @@ class Classroom(models.Model):
         MediaFile, related_name='mediaFiles', blank=True)
     messages = models.ManyToManyField(
         Message, related_name='classMessage', blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
     blocked_accounts = ArrayField(models.CharField(max_length=len(str(uuid.uuid1())), default=None, blank=True), default=list, blank=True)
 
     def __str__(self) -> str:

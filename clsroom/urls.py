@@ -1,7 +1,8 @@
-from accounts.views import *
-from faculty.views import *
-from student.views import *
 from django.urls import path
+
+from clsroom.accounts.views import LoginView, RegistrationView, ResetPassword
+from clsroom.faculty.views import ClassRoomView
+from clsroom.student.views import JoinClassRoom, LeaveClassView
 
 urlpatterns = [
     path('register', RegistrationView.as_view(), name='register'),

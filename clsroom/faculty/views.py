@@ -24,7 +24,7 @@ class ClassRoomView(APIView):
             if not user.is_faculty:
                 return Response({'error': 'Rejected! Non Faculty Member'}, status=status.HTTP_401_UNAUTHORIZED)
         except:
-             return Response({'error': 'Invalid Credential'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'error': 'Invalid Credential'}, status=status.HTTP_401_UNAUTHORIZED)
         serializer = ClassRoomSerializer(data=data)
         if serializer.is_valid():
             classroom = Classroom.objects.create(**serializer.validated_data)
@@ -36,6 +36,3 @@ class ClassRoomView(APIView):
                     "class_id": classroom.cls_id,
                 }, }, status=status.HTTP_201_CREATED)
         return Response({"error": serializer.errors}, status=status.HTTP_403_FORBIDDEN)
-
-    def get(self, request):
-        return Response({"msg" : "success"})

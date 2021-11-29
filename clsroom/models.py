@@ -65,14 +65,14 @@ class Account(AbstractBaseUser, PermissionsMixin):
         return self.is_satff
 
 
-# FIXME setup uuid unique for every time 
+# FIXME setup uuid unique for every time
 
 class Comment(models.Model):
     cid = models.CharField(
         max_length=len(str(uuid.uuid1())),
-        primary_key=True, default=str(uuid.uuid1()), editable=False)
-    cls_id = models.CharField(max_length=16, blank=False)
-    mid = models.CharField(max_length=16, blank=False)
+        primary_key=True, default=len(str(uuid.uuid1())), editable=False)
+    cls_id = models.CharField(max_length=len(str(uuid.uuid1())), blank=False)
+    mid = models.CharField(max_length=len(str(uuid.uuid1())), blank=False)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     publiser = models.ForeignKey(
@@ -97,7 +97,7 @@ class Message(models.Model):
     mid = models.CharField(
         max_length=len(str(uuid.uuid1())),
         primary_key=True, default=str(uuid.uuid1()), editable=False)
-    cls_id = models.CharField(max_length=16, blank=False)
+    cls_id = models.CharField(max_length=len(str(uuid.uuid1())), blank=False)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     publiser = models.ForeignKey(
@@ -125,7 +125,8 @@ class Classroom(models.Model):
         Message, related_name='classMessage', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
-    blocked_accounts = ArrayField(models.CharField(max_length=len(str(uuid.uuid1())), default=None, blank=True), default=list, blank=True)
+    blocked_accounts = ArrayField(models.CharField(max_length=len(
+        str(uuid.uuid1())), default=None, blank=True), default=list, blank=True)
 
     def __str__(self) -> str:
         return str(self.cls_id) + " <==NAME==> " + self.name

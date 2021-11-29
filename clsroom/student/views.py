@@ -2,15 +2,12 @@ from django.db.models.query import QuerySet
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.authtoken.models import Token
 import json
 from rest_framework.decorators import api_view, permission_classes
 
 from clsroom.models import Account, Classroom
 from clsroom.serializers import ClassRoomSerializer
-
-# FIXME put filtering query in try block to avoid errors
 
 
 class JoinClassRoom(APIView):

@@ -70,10 +70,9 @@ class Account(AbstractBaseUser, PermissionsMixin):
 class Comment(models.Model):
     cid = models.CharField(
         max_length=len(str(uuid.uuid1())),
-        primary_key=True, default=len(str(uuid.uuid1())), editable=False)
-    cls_id = models.CharField(max_length=len(str(uuid.uuid1())), blank=False)
+        primary_key=True, default=str(uuid.uuid1()), editable=False)
     mid = models.CharField(max_length=len(str(uuid.uuid1())), blank=False)
-    message = models.TextField()
+    message = models.TextField(blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     publiser = models.ForeignKey(
         Account, related_name='cpublisher', on_delete=models.CASCADE)
@@ -98,7 +97,7 @@ class Message(models.Model):
         max_length=len(str(uuid.uuid1())),
         primary_key=True, default=str(uuid.uuid1()), editable=False)
     cls_id = models.CharField(max_length=len(str(uuid.uuid1())), blank=False)
-    message = models.TextField()
+    message = models.TextField(blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     publiser = models.ForeignKey(
         Account, related_name='mpublisher', on_delete=models.CASCADE)

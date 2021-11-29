@@ -2,3 +2,6 @@
 /clsroom/__pycache__/
 /clsroom/migrations/__pycache__/
 /clsroom/accounts/__pycache__/
+/clsroom/faculty/__pycache__/
+/clsroom/student/__pycache__/
+/clsroom/messages/__pycache__/

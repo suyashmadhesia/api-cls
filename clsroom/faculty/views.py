@@ -12,6 +12,9 @@ from clsroom.serializers import ClassRoomSerializer
 
 class ClassRoomView(APIView):
 
+    """
+    Create class room
+    """
     def post(self, request):
         token_key = request.META.get('HTTP_AUTHORIZATION')
         data = json.loads(request.body)
@@ -22,7 +25,7 @@ class ClassRoomView(APIView):
             user: Account = token.user
             data['owner'] = str(user.account_id)
             if not user.is_faculty:
-                return Response({'error': 'Rejected! Non Faculty Member'}, status=status.HTTP_401_UNAUTHORIZED)
+                return Response({'error': 'Rejected! Non Faculty Member'}, status=status.HTTP_406_NOT_ACCEPTABLE)
         except:
             return Response({'error': 'Invalid Credential'}, status=status.HTTP_401_UNAUTHORIZED)
         serializer = ClassRoomSerializer(data=data)

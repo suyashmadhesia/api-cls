@@ -26,27 +26,6 @@ class LoginView(APIView):
 
         token: Token = Token.objects.get(user=account)
         return Response({'token': token.key, 'name': account.name, 'account_id': account.account_id, 'is_faculty': account.is_faculty, 'classrooms': account.cls_room_id}, status=status.HTTP_200_OK)
-    
-    def get(self, request):
-        data :dict = json.loads(request.body)
-        res = []
-        try:
-            assert data['classroom_ids'], KeyError()
-            cids = data['classroom_ids']
-            for i in range(len(cids)):
-                cls_data = {}
-                classroom = Classroom.objects.get(cls_id=cids[i].strip())
-                cls_data['cls_id'] = classroom.cls_id
-                cls_data['name'] = classroom.name
-                cls_data['class_teacher'] = classroom.owner.account_id
-                cls_data['teacher_name'] = classroom.owner.name
-                cls_data['activity'] = classroom.is_active
-                cls_data['last_updated'] = classroom.updated_at
-                res.append(cls_data)
-            return Response({"data" : res}, status=status.HTTP_200_OK)
-        except KeyError as key_error:
-            print(key_error)
-            return Response({"data" : res}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
@@ -109,3 +88,7 @@ class ResetPassword(APIView):
         user.save()
         token: Token = Token.objects.create(user=user)
         return Response({"message": "successfull"}, status=status.HTTP_202_ACCEPTED)
+
+
+class ForgetPassword(APIView):
+    pass

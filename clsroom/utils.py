@@ -7,3 +7,4 @@ def base():
 
 def generate_uid():
     uid = base() + str(uuid.uuid1()) + base()
+    return uid

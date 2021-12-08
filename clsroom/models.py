@@ -4,6 +4,8 @@ from django.contrib.auth.models import PermissionsMixin
 from django.contrib.postgres.fields import ArrayField
 import uuid
 
+from clsroom.utils import generate_uid
+
 
 class AccountManager(BaseUserManager):
 
@@ -42,7 +44,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
     cls_room_id = ArrayField(models.CharField(
-        max_length=len(str(uuid.uuid1())), blank=True), default=list)
+        max_length=40, blank=True), default=list)
 
     objects = AccountManager()
     USERNAME_FIELD = 'account_id'
@@ -69,9 +71,9 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
 class Comment(models.Model):
     cid = models.CharField(
-        max_length=len(str(uuid.uuid1())),
-        primary_key=True, default=str(uuid.uuid1()), editable=False)
-    mid = models.CharField(max_length=len(str(uuid.uuid1())), blank=False)
+        max_length=40,
+        primary_key=True, default=generate_uid(), editable=False)
+    mid = models.CharField(max_length=40, blank=False)
     message = models.TextField(blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     publiser = models.ForeignKey(
@@ -82,7 +84,10 @@ class Comment(models.Model):
 
 
 class MediaFile(models.Model):
-    m_url = models.CharField(max_length=200, primary_key=True)
+    mid = models.CharField(
+        max_length=40,
+        primary_key=True, default=generate_uid(), editable=False)
+    m_url = models.CharField(max_length=200, blank=False)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     comment = models.ManyToManyField(
@@ -94,9 +99,9 @@ class MediaFile(models.Model):
 
 class Message(models.Model):
     mid = models.CharField(
-        max_length=len(str(uuid.uuid1())),
-        primary_key=True, default=str(uuid.uuid1()), editable=False)
-    cls_id = models.CharField(max_length=len(str(uuid.uuid1())), blank=False)
+        max_length=40,
+        primary_key=True, default=generate_uid(), editable=False)
+    cls_id = models.CharField(max_length=40, blank=False)
     message = models.TextField(blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     publiser = models.ForeignKey(
@@ -110,8 +115,8 @@ class Message(models.Model):
 
 class Classroom(models.Model):
     cls_id = models.CharField(
-        max_length=len(str(uuid.uuid1())),
-        primary_key=True, default=str(uuid.uuid1()), editable=False)
+        max_length=40,
+        primary_key=True, default=generate_uid(), editable=False)
     name = models.CharField(max_length=30, blank=False)
     owner = models.ForeignKey(
         Account, related_name='classOwner', on_delete=models.CASCADE, blank=False)
@@ -125,7 +130,7 @@ class Classroom(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     blocked_accounts = ArrayField(models.CharField(max_length=len(
-        str(uuid.uuid1())), default=None, blank=True), default=list, blank=True)
+        generate_uid()), default=None, blank=True), default=list, blank=True)
 
     def __str__(self) -> str:
         return str(self.cls_id) + " <==NAME==> " + self.name

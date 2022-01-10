@@ -2,7 +2,7 @@ from django.urls import path
 
 from clsroom.accounts.views import LoginView, RegistrationView, ResetPassword
 from clsroom.faculty.views import ClassRoomView
-from clsroom.messages.views import CommentView, MessageView
+from clsroom.messages.views import CommentView, MediaFileView, MessageView
 from clsroom.student.views import JoinClassRoom, LeaveClassView
 from clsroom.views import *
 
@@ -14,8 +14,10 @@ urlpatterns = [
     path('join-class', JoinClassRoom.as_view(), name='join class'),
     path('leave-class', LeaveClassView.as_view(), name='leave class'),
     path('message', MessageView.as_view(), name='message'),
+    path('file', MediaFileView.as_view(), name='media'),
     path('comment', CommentView.as_view(), name='commets'),
     path('u/<str:pk>', get_all_class, name="Get all class"),
-    path('m/<str:pk>', get_class_messages, name="Get class Messages")
+    path('m/<str:pk>', get_class_messages, name="Get class Messages"),
+    path('f/<str:pk>', get_class_files, name='Get files of the class'),
 ]
 

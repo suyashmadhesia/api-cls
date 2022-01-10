@@ -2,9 +2,9 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from clsroom.messages.serializes import MessageSerializer
+from clsroom.messages.serializes import MediaFilesSerializer, MessageSerializer
 
-from clsroom.models import Account, Classroom, Message
+from clsroom.models import Account, Classroom, MediaFile, Message
 
 
 @api_view(['GET'])
@@ -36,3 +36,9 @@ def get_class_messages(request, pk):
     messages = Message.objects.filter(cls_id=pk).order_by('created_at')
     serializer = MessageSerializer(messages, many=True)
     return Response({"data" :serializer.data}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def get_class_files(request, pk):
+    files = MediaFile.objects.filter(cls_id=pk).order_by('created_at')
+    serializer = MediaFilesSerializer(files, many=True)
+    return Response({"data": serializer.data}, status=status.HTTP_200_OK)

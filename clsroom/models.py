@@ -44,7 +44,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
     cls_room_id = ArrayField(models.CharField(
-        max_length=40, blank=True), default=list)
+        max_length=40, blank=True), default=list, blank=True)
 
     objects = AccountManager()
     USERNAME_FIELD = 'account_id'
@@ -67,12 +67,14 @@ class Account(AbstractBaseUser, PermissionsMixin):
         return self.is_satff
 
 
-# FIXME setup uuid unique for every time
+'''
+UUID fixed!!
+'''
 
 class Comment(models.Model):
     cid = models.CharField(
         max_length=40,
-        primary_key=True, default=generate_uid(), editable=False)
+        primary_key=True, default=generate_uid, editable=False)
     mid = models.CharField(max_length=40, blank=False)
     message = models.TextField(blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -86,7 +88,7 @@ class Comment(models.Model):
 class MediaFile(models.Model):
     mid = models.CharField(
         max_length=40,
-        primary_key=True, default=generate_uid(), editable=False)
+        primary_key=True, default=generate_uid, editable=False)
     m_url = models.CharField(max_length=200, blank=False)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -100,7 +102,7 @@ class MediaFile(models.Model):
 class Message(models.Model):
     mid = models.CharField(
         max_length=40,
-        primary_key=True, default=generate_uid(), editable=False)
+        primary_key=True, default=generate_uid, editable=False)
     cls_id = models.CharField(max_length=40, blank=False)
     message = models.TextField(blank=False)
     created_at = models.DateTimeField(auto_now_add=True)

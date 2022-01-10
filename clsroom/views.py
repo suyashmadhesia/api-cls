@@ -20,6 +20,7 @@ def get_all_class(request, pk):
                     cls_id=i.strip())
                 if classroom.is_active:  # wether class is active or not if not active do not send to the user
                     class_detail["name"] = classroom.name
+                    class_detail['cls_id'] = classroom.cls_id
                     class_detail["owner"] = classroom.owner.name
                     class_detail["owner_acc_id"] = classroom.owner.account_id
                     res_data.append(class_detail)

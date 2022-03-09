@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.postgres.fields import ArrayField
-import uuid
 
 from clsroom.utils import generate_uid
 
@@ -38,7 +37,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     account_id = models.CharField(max_length=10, primary_key=True)
     branch = models.CharField(max_length=2, default='', blank=True, null=True)
     name = models.CharField(max_length=30, blank=True)
-    email = models.EmailField(unique=True, blank=False)
+    email = models.EmailField(unique=True, blank=True)
     is_faculty = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -70,6 +69,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
 '''
 UUID fixed!!
 '''
+
 
 class Comment(models.Model):
     cid = models.CharField(

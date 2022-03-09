@@ -1,6 +1,6 @@
 from django.urls import path
 
-from clsroom.accounts.views import LoginView, RegistrationView, ResetPassword
+from clsroom.accounts.views import LoginView, RegistrationView, ResetPassword, username_availability
 from clsroom.faculty.views import ClassRoomView
 from clsroom.messages.views import CommentView, MediaFileView, MessageView
 from clsroom.student.views import JoinClassRoom, LeaveClassView
@@ -19,5 +19,6 @@ urlpatterns = [
     path('u/<str:pk>', get_all_class, name="Get all class"),
     path('m/<str:pk>', get_class_messages, name="Get class Messages"),
     path('f/<str:pk>', get_class_files, name='Get files of the class'),
+    path('check_user/<str:pk>', username_availability, name='Check username availability')
 ]
 

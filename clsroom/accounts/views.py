@@ -30,10 +30,9 @@ class LoginView(APIView):
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
-def email_available(request):
-    result = False
-    email = request.GET['email']
-    accounts = Account.objects.filter(email=email)
+def username_availability(request):
+    account_id = request.GET['account_id']
+    accounts = Account.objects.filter(account_id=account_id)
     if not accounts.exists():
         return Response({'available': 1}, status=status.HTTP_200_OK)
     else:
@@ -47,13 +46,13 @@ class RegistrationView(APIView):
         data: dict = json.loads(request.body)
         # print(data['password'])
         try:
-            assert data['account_id'] and data['email'] and data['password'], KeyError()
+            assert data['account_id'] and data['password'] and data['email'], KeyError()
             accounts = Account.objects.filter(account_id=data['account_id'])
-            acc_email = Account.objects.filter(email=data['email'])
+            emails = Account.objects.filter(email=data['email'])
             if accounts.exists():
-                return Response({'error': 'account already exist'}, status=status.HTTP_403_FORBIDDEN)
-            if acc_email.exists():
-                return Response({'error': 'email is already used'}, status=status.HTTP_403_FORBIDDEN)
+                return Response({'error': 'username is already in use'}, status=status.HTTP_403_FORBIDDEN)
+            if emails.exists():
+                return Response({'error': 'email is already in use'}, status=status.HTTP_403_FORBIDDEN)
             password = data['password']
             del data['password']
             data['account_id'] = data['account_id'].strip()
@@ -66,7 +65,7 @@ class RegistrationView(APIView):
             return Response({'token': token.key, 'name': account.name, 'account_id': account.account_id, 'is_faculty': account.is_faculty},
                             status=status.HTTP_201_CREATED)
         except KeyError as key_error:
-            print(key_error)
+            # print(key_error)
             return Response({"error": "Invalid Fields"}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
 

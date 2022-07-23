@@ -62,7 +62,7 @@ class RegistrationView(APIView):
             account.is_active = True
             account.save()
             token = Token.objects.create(user=account)
-            return Response({'token': token.key, 'name': account.name, 'account_id': account.account_id, 'is_faculty': account.is_faculty},
+            return Response({'token': token.key, 'name': account.name, 'account_id': account.account_id, 'is_faculty': account.is_faculty, 'email': account.email},
                             status=status.HTTP_201_CREATED)
         except KeyError as key_error:
             # print(key_error)

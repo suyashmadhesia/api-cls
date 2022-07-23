@@ -1,5 +1,6 @@
 TODO
 
-1. Submit assignment facility
+-> Submit assignment facility
 -> How to submit assingent in the classroom
 -> Forget passwords
+-> Django Signals on login and logout

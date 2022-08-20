@@ -7,6 +7,7 @@ from clsroom.student.views import JoinClassRoom, LeaveClassView
 from clsroom.views import *
 
 urlpatterns = [
+    path('hello', hello, name="hello"),
     path('register', RegistrationView.as_view(), name='register'),
     path('login', LoginView.as_view(), name='login'),
     path('reset-password', ResetPassword.as_view(), name='reset password'),

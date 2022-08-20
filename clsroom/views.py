@@ -1,7 +1,7 @@
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework.permissions import AllowAny
 from clsroom.messages.serializes import MediaFilesSerializer, MessageSerializer
 
 from clsroom.models import Account, Classroom, MediaFile, Message
@@ -42,3 +42,8 @@ def get_class_files(request, pk):
     files = MediaFile.objects.filter(cls_id=pk).order_by('created_at')
     serializer = MediaFilesSerializer(files, many=True)
     return Response({"data": serializer.data}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def hello(request):
+    return Response({"message": "Hello World"}, status=status.HTTP_200_OK)

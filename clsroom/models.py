@@ -118,7 +118,7 @@ class Message(models.Model):
 class Classroom(models.Model):
     cls_id = models.CharField(
         max_length=40,
-        primary_key=True, default=generate_uid(), editable=False)
+        primary_key=True, default=generate_uid, editable=False)
     name = models.CharField(max_length=30, blank=False)
     owner = models.ForeignKey(
         Account, related_name='classOwner', on_delete=models.CASCADE, blank=False)

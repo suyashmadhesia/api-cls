@@ -3,7 +3,7 @@
 * Install [pip](https://pip.pypa.io/en/stable/)
 * Install [Postgres](https://www.postgresql.org/download/)
 ## General info
-This is project is backend of classroom app.
+This is backend of classroom app written in Django rest framework.
 
 ## Local Database Setup (Postgresql)
 

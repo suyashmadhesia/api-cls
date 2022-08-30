@@ -2,6 +2,7 @@
 * Install [Python](https://www.python.org/downloads/)
 * Install [pip](https://pip.pypa.io/en/stable/)
 * Install [Postgres](https://www.postgresql.org/download/)
+* Install [Make](http://www.gnu.org/software/make)
 ## General info
 This is backend of classroom app written in Django rest framework.
 

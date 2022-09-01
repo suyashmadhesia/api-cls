@@ -21,7 +21,7 @@ class LoginView(APIView):
             return Response({'error': 'No Account Found'}, status=status.HTTP_404_NOT_FOUND)
         account: Account = accounts.first()
         token: Token = Token.objects.get(user=account)
-        if not account.check_password(data['password']) and not token:
+        if not account.check_password(data['password']) or not token:
             return Response({"error": "Invalid Credentials"}, status=status.HTTP_401_UNAUTHORIZED)
         return Response({'email': account.email, 'token': token.key, 'name': account.name, 'account_id': account.account_id, 'is_faculty': account.is_faculty, 'classrooms': account.cls_room_id}, status=status.HTTP_200_OK)
 

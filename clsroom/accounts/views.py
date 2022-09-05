@@ -18,7 +18,7 @@ class LoginView(APIView):
         accounts: QuerySet = Account.objects.filter(
             account_id=data['account_id'])
         if not accounts.exists():
-            return Response({'error': 'No Account Found'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': 'Invalid Credentials'}, status=status.HTTP_404_NOT_FOUND)
         account: Account = accounts.first()
         token: Token = Token.objects.get(user=account)
         if not account.check_password(data['password']) or not token:

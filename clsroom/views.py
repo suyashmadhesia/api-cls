@@ -28,7 +28,7 @@ def get_all_class(request, pk):
                 return Response({"error": "Invalid Fields"}, status=status.HTTP_406_NOT_ACCEPTABLE)
         return Response({"data": res_data}, status=status.HTTP_200_OK)
     except:
-        return Response({}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"error": "Invalid Credentials"}, status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['GET'])
